@@ -8,7 +8,6 @@ namespace AddLocalizedStringsFile
 {
     class LocalizationBuildPlayerIOS : IPostprocessBuildWithReport
     {
-        const string k_Placeholder = "<CONTROLLED BY LOCALIZATION>";
         public int callbackOrder => 1;
 
         public void OnPostprocessBuild(BuildReport report)
