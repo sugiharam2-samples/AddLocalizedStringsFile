@@ -3,8 +3,9 @@ using System;
 using System.Collections;
 using System.Reflection;
 using UnityEditor.iOS.Xcode;
+using AddLocalizedStringsFile;
 
-namespace UnityEditor.Localization.Platform.iOS
+namespace AddLocalizedStringsFile
 {
     /// <summary>
     /// Provides access to PBXProject internals via reflection.
