@@ -12,7 +12,10 @@ namespace AddLocalizedStringsFile
 
         public void OnPostprocessBuild(BuildReport report)
         {
-            Player.AddLocalizationToXcodeProject(report.summary.outputPath);
+            var path = report.summary.outputPath;
+            Player.AddLanguages(path);
+            Player.AddLocalization(path, "InfoPlist.strings");
+            Player.AddLocalization(path, "Localizable.strings");
         }
     }
 }

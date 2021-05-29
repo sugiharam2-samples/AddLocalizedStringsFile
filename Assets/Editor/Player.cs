@@ -13,12 +13,7 @@ namespace AddLocalizedStringsFile
             "ja",
         };
 
-        static string[] fileList = new string[] {
-            "InfoPlist.strings",
-            "Localizable.strings",
-        };
-
-        public static void AddLocalizationToXcodeProject(string projectDirectory)
+        public static void AddLanguages(string projectDirectory)
         {
             // Open project
             var pbxPath = PBXProject.GetPBXProjectPath(projectDirectory);
@@ -38,30 +33,37 @@ namespace AddLocalizedStringsFile
                 // Add code
                 project.AddKnownRegion(code);
                 bundleLanguages.AddString(code);
-
-                // Add directory
-                var localeDir = code + ".lproj";
-                var dir = Path.Combine(projectDirectory, localeDir);
-                Directory.CreateDirectory(dir);
-
-                foreach (var kInfoFile in fileList)
-                {
-                    var filePath = Path.Combine(dir, kInfoFile);
-                    var relativePath = Path.Combine(localeDir, kInfoFile);
-
-                    // Add file
-                    Debug.Log(relativePath);
-                    File.WriteAllText(filePath,
-                        "/*\n" +
-                        $"\t{kInfoFile} ({code})\n" +
-                        $"\tThis file was auto-generated\n" +
-                        $"*/\n");
-                    project.AddLocaleVariantFile(kInfoFile, code, relativePath);
-                }
             }
 
             // Close
             plistDocument.WriteToFile(plistPath);
+            project.WriteToFile(pbxPath);
+        }
+
+        public static void AddLocalization(string projectDirectory, string kInfoFile)
+        {
+            // Open project
+            var pbxPath = PBXProject.GetPBXProjectPath(projectDirectory);
+            var project = new PBXProject();
+            project.ReadFromFile(pbxPath);
+
+            foreach (var code in codeList)
+            {
+                // Add directory
+                var localeDir = $"{code}.lproj";
+                var dir = Path.Combine(projectDirectory, localeDir);
+                Directory.CreateDirectory(dir);
+
+                var filePath = Path.Combine(dir, kInfoFile);
+                var relativePath = Path.Combine(localeDir, kInfoFile);
+
+                // Add file
+                Debug.Log(relativePath);
+                File.WriteAllText(filePath, $"// {kInfoFile} ({code})");
+                project.AddLocaleVariantFile(kInfoFile, code, relativePath);
+            }
+
+            // Close
             project.WriteToFile(pbxPath);
         }
     }
